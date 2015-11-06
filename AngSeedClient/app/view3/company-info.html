@@ -1,0 +1,75 @@
+<div class="col-md-6 col-md-offset-3">
+    <form>
+        <div class="form-group">
+            <label for="searchText">Search Text</label>
+            <input type="text" class="form-control" ng-model="ctrl.query" id="searchText" placeholder="Search">
+        </div>
+        <div class="form-group">
+            <label for="options">Search Options</label>
+            <select class="form-control" ng-model="ctrl.option" id="options">
+                <option selected="selected">Regular</option>
+                <option>CVR</option>
+                <option>Name</option>
+                <option>Production entity</option>
+                <option>Phone</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="CountrySelect">Country</label>
+            <select class="form-control" ng-model="ctrl.country" id="CountrySelect">
+                <option selected="selected">DK</option>
+                <option>NO</option>
+            </select>
+        </div>    
+        <button type="submit" ng-click="ctrl.search()" class="btn btn-default">Search</button>
+    </form>
+
+    <h4 style="margin-top: 30px;">{{ctrl.data.name}}</h4>
+    <table class="table table-small ">
+        <tr>
+            <td>CVR:</td>
+            <td>{{ctrl.data.vat}}</td>
+        </tr>
+        <tr>
+            <td>Address:</td>
+            <td>{{ctrl.data.address}}</td>
+        </tr>
+        <tr>
+            <td>Zip+City:</td>
+            <td>{{ctrl.data.zipcode}} {{ctrl.data.city}}</td>
+        </tr>
+        <tr>
+            <td>Start date:</td>
+            <td>{{ctrl.data.startdate}}</td>
+        </tr>
+        <tr>
+            <td>Employees:</td>
+            <td>{{ctrl.data.employees}}</td>
+        </tr>
+
+    </table>
+    <uib-accordion close-others="true">
+        <uib-accordion-group ng-repeat="unit in ctrl.data.productionunits" heading="{{unit.name}}" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
+            <table class="table table-small ">
+                <tr>
+                    <td>Address:</td>
+                    <td>{{unit.address}}</td>
+                </tr>
+                <tr>
+                    <td>Phone:</td>
+                    <td>{{unit.phone}}</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{unit.email}}</td>
+                </tr>
+                <tr>
+                    <td>Zip+City:</td>
+                    <td>{{unit.zipcode}} {{unit.city}}</td>
+                </tr>
+            </table>
+        </uib-accordion-group>
+
+    </uib-accordion>
+
+</div>

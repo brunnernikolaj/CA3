@@ -1,0 +1,36 @@
+
+<div class="col-md-7 col-md-offset-3">
+    <h1>Exchange rates</h1>
+    <form class="form-inline">
+        <div class="form-group">
+            <label for="options">From</label>
+            <select class="form-control" ng-model="ctrl.from" id="options">
+                <option ng-repeat="cur in ctrl.data" >{{cur.code}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="options">To</label>
+            <select class="form-control" ng-model="ctrl.to" id="options">
+                <option ng-repeat="cur in ctrl.data" >{{cur.code}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="value">Amount</label>
+            <input class="form-control" type="number" ng-model="ctrl.amount" id="value" placeholder="enter amount">
+        </div>
+        <button class="btn btn-primary" ng-click="ctrl.calculate()">Calculate</button>
+    </form>
+    <h4>Total: {{ctrl.total}}</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Rate</th>   
+            </tr>
+        </thead>
+        <tr ng-repeat="cur in ctrl.data">
+            <td>{{cur.code}}</td>
+            <td>{{cur.rate}}</td>        
+        </tr>
+    </table>
+</div>
