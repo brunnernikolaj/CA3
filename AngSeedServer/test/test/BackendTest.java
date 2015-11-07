@@ -8,13 +8,17 @@ package test;
 import static com.jayway.restassured.RestAssured.basePath;
 import static com.jayway.restassured.RestAssured.baseURI;
 import static com.jayway.restassured.RestAssured.defaultParser;
+import static com.jayway.restassured.RestAssured.get;
 import static com.jayway.restassured.RestAssured.given;
 import com.jayway.restassured.parsing.Parser;
 import static com.jayway.restassured.path.json.JsonPath.from;
+import java.math.BigDecimal;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -32,9 +36,9 @@ public class BackendTest {
     static Server server;
 
     public BackendTest() {
-        baseURI = "http://localhost:8082";
+        baseURI = "http://localhost:8080";
         defaultParser = Parser.JSON;
-        basePath = "/api";
+        basePath = "/AngSeedServer/api";
     }
 
     @BeforeClass
@@ -56,81 +60,139 @@ public class BackendTest {
         server.join();
     }
 
+//    @Test
+//    public void LoginWrongUsername() {
+//        given().
+//                contentType("application/json").
+//                body("{'username':'john','password':'test'}").
+//                when().
+//                post("/login").
+//                then().
+//                statusCode(401).
+//                body("error.message", equalTo("Ilegal username or password"));
+//    }
+//
+//    @Test
+//    public void LoginWrongUsernameAndPassword() {
+//        //wrong username and password
+//        given().
+//                contentType("application/json").
+//                body("{'username':'john','password':'doe'}").
+//                when().
+//                post("/login").
+//                then().
+//                statusCode(401).
+//                body("error.message", equalTo("Ilegal username or password"));
+//    }
+//
+//    @Test
+//    public void Login() {
+//        //Successful login
+//        given().
+//                contentType("application/json").
+//                body("{'username':'user','password':'test'}").
+//                when().
+//                post("/login").
+//                then().
+//                statusCode(200);
+//
+//    }
+//
+//    @Test
+//    public void testDemoUserNoLogin() {
+//        given().
+//                contentType("application/json").
+//                when().
+//                get("/demouser").
+//                then().
+//                statusCode(401);
+//    }
+//
+//    @Test
+//    public void testDemoUserLogin() {
+//        //First, make a login to get the token for the Authorization, saving the response body in String json
+//        String json = given().
+//                contentType("application/json").
+//                body("{'username':'user','password':'test'}").
+//                when().
+//                post("/login").
+//                then().
+//                statusCode(200).extract().asString();
+//
+//        //Then test /demouser URL with the correct token extracted from the JSON string.
+//        given().
+//                contentType("application/json").
+//                header("Authorization", "Bearer " + from(json).get("token")).
+//                when().
+//                get("/demouser").
+//                then().
+//                statusCode(200);
+//        //And test that the user cannot access /demoadmin rest service
+//        given().
+//                contentType("application/json").
+//                header("Authorization", "Bearer " + from(json).get("token")).
+//                when().
+//                get("/demoadmin").
+//                then().
+//                statusCode(403).
+//                body("error.message", equalTo("You are not authorized to perform the requested operation"));
+//    }
+//
     @Test
-    public void LoginWrongUsername() {
+    public void loginDailyRates() {
         given().
                 contentType("application/json").
-                body("{'username':'john','password':'test'}").
-                when().
-                post("/login").
-                then().
-                statusCode(401).
-                body("error.message", equalTo("Ilegal username or password"));
-    }
-
-    @Test
-    public void LoginWrongUsernameAndPassword() {
-        //wrong username and password
-        given().
-                contentType("application/json").
-                body("{'username':'john','password':'doe'}").
-                when().
-                post("/login").
-                then().
-                statusCode(401).
-                body("error.message", equalTo("Ilegal username or password"));
-    }
-
-    @Test
-    public void Login() {
-        //Successful login
-        given().
-                contentType("application/json").
-                body("{'username':'user','password':'test'}").
+                body("{'username':'admin','password':'admin'}").
                 when().
                 post("/login").
                 then().
                 statusCode(200);
 
+        get("/currency/dailyrates")
+                .then()
+                .assertThat()
+                .body("size()",is(33));
     }
+//    
+//    @Test
+//    public void dailyRatesNoLogin() {
+//        get("/currency/dailyrates")
+//                .then()
+//                .assertThat()
+//                .statusCode(401);
+//    }
 
+//        @Test
+//    public void Register() {
+//        given().
+//                contentType("application/json").
+//                body("{'username':'test1','password':'test1'}").
+//                when().
+//                post("/register").
+//                then().
+//                statusCode(200);
+//
+//        given().
+//                contentType("application/json").
+//                body("{'username':'test1','password':'test1'}").
+//                when().
+//                post("/login").
+//                then().
+//                statusCode(200);        
+//    }
+    
     @Test
-    public void testDemoUserNoLogin() {
+    public void LoginCalculator() {
         given().
                 contentType("application/json").
-                when().
-                get("/demouser").
-                then().
-                statusCode(401);
-    }
-
-    @Test
-    public void testDemoUserLogin() {
-        //First, make a login to get the token for the Authorization, saving the response body in String json
-        String json = given().
-                contentType("application/json").
-                body("{'username':'user','password':'test'}").
+                body("{'username':'admin','password':'admin'}").
                 when().
                 post("/login").
                 then().
-                statusCode(200).extract().asString();
-
-        //Then test /demouser URL with the correct token extracted from the JSON string.
-        given().
-                contentType("application/json").
-                header("Authorization", "Bearer " + from(json).get("token")).
-                when().
-                get("/demouser").
-                then().
                 statusCode(200);
-        //And test that the user cannot access /demoadmin rest service
-        given().
-                contentType("application/json").
-                header("Authorization", "Bearer " + from(json).get("token")).
-                when().
-                get("/demoadmin").
-                then().
-                statusCode(403).
-                body("error.message", equalTo("You are not authorized to perform the requested operation"));
+
+        get("/currency/calculator/100/AUD/BGN")
+                .then()
+                .assertThat().body(is("128.39088596974227"));
     }
 }
